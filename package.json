@@ -27,6 +27,6 @@
     "request": "^2.88.0"
   },
   "pkg": {
-    "assets": [ "cert.pem", "key.pem" ]
+    "assets": [ "./cert.pem", "./key.pem" ]
   }
 }
