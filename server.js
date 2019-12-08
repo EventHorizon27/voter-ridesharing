@@ -38,7 +38,7 @@ app.get('/', function (req, res) {
 
 // POST method route
 app.post('/', function (req, res) { //add new driver
-    let result = drivers.filter(obj => obj.name === req.query.name && obj.address === req.query.address); //check if there are any drivers with same address and name
+    let result = drivers.filter(obj => obj.name === req.query.name && obj.address === req.query.address && obj.zip_code === req.query.zip_code); //check if there are any drivers with same address and name
     if (result.length > 0) { //if the array of those drivers contains any drivers send message and exit
         res.send("POST sent duplicate driver");
     }
