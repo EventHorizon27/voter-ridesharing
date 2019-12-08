@@ -13,8 +13,8 @@ const usersStream = fs.createWriteStream('users.csv', { flags: 'a' });
 
 (async function () {
     https.createServer({
-        key: fs.readFileSync('./key.pem'),
-        cert: fs.readFileSync('./cert.pem'),
+        key: fs.readFileSync('./ssh/key.pem'),
+        cert: fs.readFileSync('./ssh/cert.pem'),
         passphrase: 'perow59~'
     }, app)
         .listen(port);//load certificate and create secure server
