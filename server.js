@@ -2,16 +2,12 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 const https = require('https');
-const { parse } = require('json2csv');
+const { parseAsync } = require('json2csv');
 const bodyParser = require('body-parser');
 const csv = require('csvtojson');
-const converter = csv({
-    noheader: true,
-    trim: true,
-});
 const port = process.env.PORT || 8080;
 let drivers = [];
-const fields = ['name', 'contact-phone', 'address', 'zip_code'];
+const fields = ['name', 'contact-phone', 'time', 'address', 'zip_code'];
 const opts = { fields };
 const usersStream = fs.createWriteStream('users.csv', { flags: 'a' });
 
@@ -24,8 +20,14 @@ const usersStream = fs.createWriteStream('users.csv', { flags: 'a' });
         .listen(port);
     app.use(bodyParser.json())
     console.log("Server up and running at port: " + port);
-    drivers += await csv().fromFile(csvFilePath);
-
+    try {
+        let driver = await csv().fromFile("users.csv");
+        drivers.push(...driver);
+        console.log(driver)
+    } catch (error) {
+        console.error(error);
+    }
+    console.log(drivers);
 })();
 // GET method route
 app.get('/', function (req, res) {
@@ -44,12 +46,10 @@ app.post('/', function (req, res) {
     }
     drivers.push(req.query);
     res.send('POST added new driver');
-    try {
-        const csv = parse(req, opts);
-        console.log(csv);
-        usersStream.write(csv);
-    } catch (err) {
-        console.error(err);
-    }
-
+    parseAsync(req.query, opts)
+        .then(csv => {
+            console.log(csv);
+            usersStream.write(csv + "\n")
+        })
+        .catch(err => console.error(err));
 });
