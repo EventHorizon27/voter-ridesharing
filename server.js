@@ -20,12 +20,16 @@ let drivers = [];
 app.get('/', function (req, res) {
     let result = drivers.filter(obj => {
         return obj.zip_code === req.query.zip;
-    })
+    });
     res.send(result);
 })
 
 // POST method route
 app.post('/', function (req, res) {
+    let result = drivers.filter(obj => obj.name === req.query.name && obj.zip_code === req.query.zip);
+    if(result!=null){
+        res.send("duplicate driver");
+    }
     drivers.push(req.query);
     res.send('POST added new driver');
 });
