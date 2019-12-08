@@ -11,11 +11,6 @@ const converter = csv({
 });
 const port = process.env.PORT || 8080;
 let drivers = [];
-csv.fromFile('users.csv');
-csv().on('data', (data) => {
-    //data is a buffer object
-    drivers.push(JSON.parse(data.toString('utf8')));
-})
 const fields = ['name', 'contact-phone', 'address', 'zip_code'];
 const opts = { fields };
 const usersStream = fs.createWriteStream('users.csv', { flags: 'a' });
@@ -29,6 +24,8 @@ const usersStream = fs.createWriteStream('users.csv', { flags: 'a' });
         .listen(port);
     app.use(bodyParser.json())
     console.log("Server up and running at port: " + port);
+    drivers += await csv().fromFile(csvFilePath);
+
 })();
 // GET method route
 app.get('/', function (req, res) {
