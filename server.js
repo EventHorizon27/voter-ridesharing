@@ -23,7 +23,6 @@ const usersStream = fs.createWriteStream('users.csv', { flags: 'a' });
     try {
         let driver = await csv().fromFile("users.csv");
         drivers.push(...driver);
-        console.log(driver)
     } catch (error) {
         console.error(error);
     }
